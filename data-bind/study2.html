@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app1">
+        <p>{{message}}</p>
+        <p>{{reverseMessage1}}</p>
+        <p>{{reverseMessage()}}</p>
+    </div>
+
+    <div id="app2">
+        <p>{{firstName}}</p>
+        <p>{{lastName}}</p>
+        <p>{{fullName}}</p>
+    </div>
+
+    <div id="app3">
+        <p>{{a}}</p>
+        <p>{{b}}</p>
+        <p>{{computedValue}}</p>
+    </div>
+
+    <div id="app4">
+        <p v-if="mkdlp">mkdlp</p>
+        <template v-if="mkdlp2==='a'">
+            <p>这是一个template集合a</p>
+            <p>这是一个template集合a</p>
+            <p>这是一个template集合a</p>
+        </template>
+        <template v-else-if="mkdlp2==='b'">
+            <p>这是一个template集合b</p>
+            <p>这是一个template集合b</p>
+            <p>这是一个template集合b</p>
+        </template>
+        <template v-else>
+            <p>这是一个template集合c</p>
+            <p>这是一个template集合c</p>
+            <p>这是一个template集合c</p>
+        </template>
+    </div>
+
+
+    <div id="app5">
+        <template v-if="loginType === 'userName'">
+            <label>userName</label>
+            <input placeholder="Enter your name!" key="userNameInput">
+        </template>
+        <template v-else>
+            <label>userEmail</label>
+            <input placeholder="Enter your e-mail!" key="userEmailInput">
+        </template>
+        <p v-show="app5Show">v-show</p>
+        <!--<template v-show="app5Show">v-show-template</template>-->v-show不支持template元素
+    </div>
+    <div id="app6">
+        <ul>
+            <li v-for="(op,idx) in ops">
+                {{op.name}}-{{idx}}
+            </li>
+        </ul>
+    </div>
+    <div id="app7">
+        <ul v-for="(value,key,index) in obj" v-bind:key="index">
+            <li>{{index}}-{{key}}:{{value}}</li>
+        </ul>
+    </div>
+
+
+    <div id="app8">
+        <ul>
+            <li v-for="n in numbers">{{n}}</li>
+        </ul>
+        <ul>
+            <li v-for="n in evenNumbers">{{n}}</li>
+        </ul>
+        <ul>
+            <li v-for="n in even(numbers)">{{n}}</li>
+        </ul>
+    </div>
+</body>
+<script>
+    var app1=new Vue({
+        el:'#app1',
+        data:{
+            message:'mkdlp'
+        },
+        computed:{
+            reverseMessage1:function(){//好处就是在message没有发生改变的情况下不用执行函数，直接读取缓存
+                return this.message.split('').reverse().join('');
+            }
+        },
+        methods:{
+            reverseMessage:function(){//函数的方式不会使用缓存
+                return this.message.split('').reverse().join('');
+            }
+        }
+    });
+    //app1.$set(app1.message,'ccccc');
+
+    // var app2=new Vue({
+    //     el:'#app2',
+    //     data:{
+    //         firstName:'mkd',
+    //         lastName:'lp',
+    //         fullName:'mkdlp'
+    //     },
+    //     watch:{
+    //         firstName:function(val){
+    //             this.fullName = val + ' ' + this.lastName
+    //         },
+    //         lastName:function(val){
+    //             this.fullName = this.firstName + ' ' + val
+    //         }
+    //     }
+    // });
+    //下面的方式更优秀
+
+    var app2=new Vue({
+        el:'#app2',
+        data:{
+            firstName:'mkd',
+            lastName:'lp',
+        },
+        computed:{
+            fullName:function(val){
+                return this.firstName+this.lastName;
+            }
+        }
+    });
+
+    var app3=new Vue({
+        el:'#app3',
+        data:{
+            a:'mkd',
+            b:'lp'
+        },
+        computed:{
+            computedValue:{
+                get:function(){
+                    return this.a+' '+this.b;
+                },
+                set:function(newValue){
+                    var name=newValue.split(' ');
+                    this.a=name[0];
+                    this.b=name[1];
+                }
+            }
+        }
+    });
+
+    var app4=new Vue({
+        el:'#app4',
+        data:{
+            mkdlp:true,
+            mkdlp2:'a'
+        }
+    });
+
+    var app5=new Vue({
+        el:'#app5',
+        data:{
+            loginType:'userName',
+            app5Show:true
+        }
+    });
+
+
+    var app6=new Vue({
+        el:'#app6',
+        data:{
+            ops:[
+                {name:'mkdlp'},
+                {name:'btdac'},
+                {name:'rrzl'}
+            ]
+        }
+    });
+    app6.ops.push({name:'sjc'});
+    // app6.ops[3]={name:'grddq'};
+    //app6.ops.length=0;
+    // Vue.set(app6.ops,3,{name:'grddq'});
+    app6.$set(app6.ops,3,{name:'grddq'});
+
+    var app7=new Vue({
+        el:'#app7',
+        data:{
+            obj:{
+                name:'mkdlp',
+                p1:'m',
+                p2:'k',
+                p3:'d'
+            }
+        }
+    });
+
+    var app8=new Vue({
+        el:'#app8',
+        data:{
+            numbers:[1,2,3,4,5,6,7,8]
+        },
+        computed:{
+            evenNumbers:function(){
+                return this.numbers.filter(function(number){
+                    return number % 2 === 0;
+                })
+            }
+        },
+        methods:{
+            even:function(numbers){
+                return numbers.filter(function(number){
+                    return number % 2 === 0;
+                });
+            }
+        }
+    });
+
+
+
+</script>
+</html>

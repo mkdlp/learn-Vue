@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        {{message}}
+    </div>
+
+    <div id="app2">
+        <span v-bind:title="message">
+            鼠标悬停几秒钟查看此处动态绑定的提示信息！
+        </span>
+    </div>
+
+    <div id="app3">
+        <p v-if="isShow">hello mkdlp!do u see me!</p>
+    </div>
+
+    <div id="app4">
+        <ol>
+            <li v-for="todo in todos">
+                {{todo.text}}
+            </li>
+        </ol>
+    </div>
+    <div id="app5">
+        <p>{{message}}</p>
+        <button v-on:click="reverseMessage">反转消息</button>
+    </div>
+    <div id="app6">
+        <p>{{message}}</p>
+        <input v-model="message"/>
+    </div>
+    <div id="app7">
+        <op-item v-for="item in groceryList"
+            v-bind:op="item"
+            v-bind:key="item.id"></op-item>
+    </div>
+    <div id="appData">
+        <p>{{a}}</p>
+    </div>
+</body>
+<script>
+    var app=new Vue({
+        el:'#app',
+        data:{
+            message:'hello mkdlp !'
+        }
+    });
+
+    var app2=new Vue({
+        el:'#app2',
+        data:{
+            message:'hello mkdlp !'+new Date().toLocaleString()
+        }
+    });
+
+    var app3=new Vue({
+        el:'#app3',
+        data:{
+            isShow:true
+        }
+    });
+
+    var app4=new Vue({
+        el:'#app4',
+        data:{
+            todos:[
+                {text:'学习 JavaScript'},
+                {text:'学习 Vue'},
+                {text:'学习 SpringCloud'}
+            ]
+        }
+    });
+
+    var app5=new Vue({
+        el:'#app5',
+        data:{
+            message:'hello mkdlp!'
+        },
+        methods:{
+            reverseMessage:function(){
+                this.message= this.message.split('').reverse().join('');
+            }
+        }
+    });
+
+    var app6=new Vue({
+        el:'#app6',
+        data:{
+            message:'hello mkdlp!'
+        }
+    });
+
+    Vue.component('op-item',{
+        props:['op'],
+        template:'<li>{{op.text}}</li>'
+    });
+
+    var app7=new Vue({
+        el:'#app7',
+        data:{
+            groceryList:[
+                {id:0,text:'luffy'},
+                {id:1,text:'ace'},
+                {id:2,text:'zoro'}
+            ]
+        }
+    });
+
+
+
+    var data={a:1};
+    // Object.freeze(data);
+    var vm=new Vue({
+        el:'#appData',
+        data : data,
+        created: function(){
+            console.log("a:"+this.a);
+        }
+    });
+    vm.$watch('a',function(newValue,oldValue){
+        console.info("a :"+oldValue+"===>"+newValue);
+    });
+
+    vm.a=3;
+    console.log(data.a);
+    data.a=4;
+    console.info(vm.a);
+    vm.b='hi';
+    console.info(vm.b);
+    console.info(data.b);
+    data.b='hello';
+    console.info(vm.b);
+    console.info(data.b);
+
+    console.info(vm.$data===data);
+    console.info(vm.$el===document.getElementById('appData'));
+
+    var app7=new Vue({
+
+    });
+
+</script>
+</html>
