@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app1">
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+    </div>
+
+    <div id="app2">
+        <title-h3 v-for="post in posts" v-bind:key="post.id" v-bind:post="post"></title-h3>
+    </div>
+
+    <div id="app3">
+        <div :style="{fontSize:postFontSize + 'em'}">
+            <title-font v-for="post in posts" v-bind:key="post.id"
+                        v-bind:post="post" v-on:enlarge-text="biggerFont"></title-font>
+        </div>
+    </div>
+</body>
+<script>
+    Vue.component('button-counter',{
+        data: function () {
+            return{
+                count:0
+            }
+        },
+        template:'<button @click="count++">点击我{{count}}次</button>'
+    });
+    new Vue({
+        el:'#app1'
+    });
+
+    Vue.component('title-h3',{
+        props:['post'],
+        template:'<div id="root-element">' +
+                    '<h3>{{post.title}}</h3>' +
+                    '<div v-html="post.content"></div>' +
+                '</div>'
+    });
+
+    new Vue({
+        el:'#app2',
+        data:{
+            posts:[
+                {id:1,title:'mkdlp',content:'wa da xi wa'},
+                {id:2,title:'btksd',content:'mao li a la lu'},
+                {id:3,title:'ace',content:'lu ffy'},
+            ]
+        }
+    });
+
+    Vue.component('title-font',{
+        props:['post'],
+        template:'<div>' +
+                    '<h3>{{post.title}}</h3>' +
+                    '<button v-on:click="$emit(\'enlarge-text\',0.1)">放大字符</button>' +
+                    '<div v-html="post.content"></div>' +
+                '</div>'
+    });
+
+    new Vue({
+        el:'#app3',
+        data:{
+            posts:[
+                {id:1,title:'mkdlp',content:'wa da xi wa'},
+                {id:2,title:'btksd',content:'mao li a la lu'},
+                {id:3,title:'ace',content:'lu ffy'},
+            ],
+            postFontSize: 1
+        },
+        methods:{
+            biggerFont:function(add){
+                this.postFontSize += add;
+            }
+        }
+    });
+</script>
+</html>
