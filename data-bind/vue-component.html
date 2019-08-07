@@ -22,6 +22,14 @@
                         v-bind:post="post" v-on:enlarge-text="biggerFont"></title-font>
         </div>
     </div>
+
+    <div id="app4">
+        <custom-input v-model="appInput"></custom-input>
+    </div>
+
+    <div id="app5">
+        <alert-box>{{message}}</alert-box>
+    </div>
 </body>
 <script>
     Vue.component('button-counter',{
@@ -78,6 +86,32 @@
             biggerFont:function(add){
                 this.postFontSize += add;
             }
+        }
+    });
+
+    Vue.component('custom-input',{
+        props:['value'],
+        template:'<input v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)">'
+    });
+
+    var app4=new Vue({
+        el:'#app4',
+        data:{
+            appInput:''
+        }
+    });
+
+    Vue.component('alert-box',{
+        template:'<div>' +
+                    '<strong>Error!</strong>' +
+                    '<slot></slot>' +
+                '</div>'
+    });
+
+    var app5=new Vue({
+        el:'#app5',
+        data:{
+            message:'mkdlp warning!'
         }
     });
 </script>
